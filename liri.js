@@ -49,7 +49,7 @@ function searchSpotify() {
     }, function (err, data) {
         if (err) {
             // return console.log('Error occurred: ' + err);
-            return console.log('Error occurred: ' + " please make search you spelled it correctly!!!!!");
+            return console.log('Error occurred: please make search you spelled it correctly!!!!!');
         }
 
         // Artist(s)
@@ -60,7 +60,7 @@ function searchSpotify() {
         var spotMusicName = data.tracks.items[0].preview_url;
         // The album that the song is from
         var spotAlbum = data.tracks.items[0].album.name;
-        console.log("The artist is " + spotArtist + " and the song's name is " + " from the album " + spotAlbum);
+        console.log("The artist is " + spotArtist + " and the song's name is "+ spotMusicName + " from the album " + spotAlbum);
     });
 }
 
