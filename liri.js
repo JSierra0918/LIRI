@@ -57,10 +57,12 @@ function searchSpotify() {
         // The song's name
         var spotMusicName = data.tracks.items[0].name;
         // A preview link of the song from Spotify
-        var spotMusicName = data.tracks.items[0].preview_url;
+        var spotPreviewName = data.tracks.items[0].preview_url;
         // The album that the song is from
         var spotAlbum = data.tracks.items[0].album.name;
-        console.log("The artist is " + spotArtist + " and the song's name is "+ spotMusicName + " from the album " + spotAlbum);
+        console.log("--------------------------------------------------------");
+        console.log("The artist is " + spotArtist + "\n and the song's name is "+ spotMusicName + "\n from the album " + spotAlbum + "\n Here's a preview link: " + spotPreviewName);
+        console.log("--------------------------------------------------------");
     });
 }
 
@@ -75,8 +77,9 @@ function searchBand() {
         var venueLocation = artist.venue.country + "," + artist.venue.city;
         // Date of the Event(use moment to format this as "MM/DD/YYYY")
         var venueEvent = artist.datetime;
-
-        console.log(search + " is playing at " + venueName + " in " + venueLocation + " on " + moment(venueEvent).format("L"));
+        console.log("--------------------------------------------------------");
+        console.log(search + " are playing at " + venueName + " in " + venueLocation + " on " + moment(venueEvent).format("L"));
+        console.log("--------------------------------------------------------");
     });
 }
 
