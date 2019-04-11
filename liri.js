@@ -65,7 +65,7 @@ function searchSpotify(search) {
         var spotPreviewName = data.tracks.items[0].preview_url;
         // The album that the song is from
         var spotAlbum = data.tracks.items[0].album.name;
-        var logData = `${lineDivide}${logTime}The artist is " + ${spotArtist} + "\nand the song's name is " + ${spotMusicName} + "\nfrom the album " + ${spotAlbum} + "\n Here's a preview link: " + ${spotPreviewName}${lineDivide}`;
+        var logData = `${lineDivide}${logTime}The artist is ${spotArtist}\nand the song's name is ${spotMusicName}\nfrom the album ${spotAlbum}\n Here's a preview link: ${spotPreviewName}${lineDivide}`;
         console.log(logData);
         //log data to log txt
         log(logData)
