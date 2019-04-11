@@ -1,45 +1,50 @@
 require("dotenv").config();
-
+//global variables
+var fs = require("fs");
 var Spotify = require('node-spotify-api');
 var axios = require("axios");
 var moment = require("moment");
 var keys = require("./keys.js");
 var spotify = new Spotify(keys.spotify);
-
+var lineDivide = "\n--------------------------------------------------------\n";
+var logTime = `${moment().format("L'LLLL")}\n`;
 //first argument should be the category
 var category = process.argv[2];
 var search = process.argv.slice(3).join(" ");
 
 //in case of search
 switch (category) {
-
     case ("spotify"):
         {
-            searchSpotify();
+            searchSpotify(search);
         }
         break;
 
     case ("band"):
         {
-            searchBand();
+            searchBand(search);
         }
         break;
 
     case ("movie"):
         {
-            searchMovie();
+            searchMovie(search);
         }
         break;
 
+    case ("read"): {
+        readTxt();
+    } break;
+
     default:
         {
-            console.log("Please type the category you want to search (spotify, band, movie)");
+            console.log("Please type the category you want to search (spotify, band, movie, fs)");
         }
 }
 
-//functions ----------------------
+// SECTION functions ----------------------=====================================
 
-function searchSpotify() {
+function searchSpotify(search) {
 
     //spotify call
     spotify.search({
@@ -60,42 +65,93 @@ function searchSpotify() {
         var spotPreviewName = data.tracks.items[0].preview_url;
         // The album that the song is from
         var spotAlbum = data.tracks.items[0].album.name;
-        console.log("--------------------------------------------------------");
-        console.log("The artist is " + spotArtist + "\n and the song's name is "+ spotMusicName + "\n from the album " + spotAlbum + "\n Here's a preview link: " + spotPreviewName);
-        console.log("--------------------------------------------------------");
+        var logData = `${lineDivide}${logTime}The artist is " + ${spotArtist} + "\nand the song's name is " + ${spotMusicName} + "\nfrom the album " + ${spotAlbum} + "\n Here's a preview link: " + ${spotPreviewName}${lineDivide}`;
+        console.log(logData);
+        //log data to log txt
+        log(logData)
     });
 }
 
-function searchBand() {
-
+function searchBand(search) {
     var bandSearch = "https://rest.bandsintown.com/artists/" + search + "/events?app_id=codingbootcamp"
     axios.get(bandSearch).then((response) => {
         var artist = response.data[0];
         // Name of the venue
         var venueName = artist.venue.name;
         // Venue location
-        var venueLocation = artist.venue.country + "," + artist.venue.city;
+        var venueLocation = artist.venue.city + ", " + artist.venue.region + ", " + artist.venue.country;
         // Date of the Event(use moment to format this as "MM/DD/YYYY")
         var venueEvent = artist.datetime;
-        console.log("--------------------------------------------------------");
-        console.log(search + " are playing at " + venueName + " in " + venueLocation + " on " + moment(venueEvent).format("L"));
-        console.log("--------------------------------------------------------");
+
+        var logData = `${lineDivide}${logTime}${search} is playing at ${venueName} \nin ${venueLocation} \non ${moment(venueEvent).format("L")}${lineDivide}`;
+        console.log(logData);
+        log(logData);
     });
 }
 
-function searchMovie() {
+function searchMovie(search) {
     var omdbSearch = "http://www.omdbapi.com/?t=" + search + "&y=&plot=short&apikey=trilogy";
 
     axios.get(omdbSearch).then((response) => {
 
-        console.log("Title: " + response.data.Title);
-        console.log("Year: " + response.data.Year);
-        console.log("IMBD Rating: " + response.data.imdbRating);
-        console.log(response.data.Ratings[1].Source + ", " + response.data.Ratings[1].Value)
-        console.log("Country: " + response.data.Country);
-        console.log("Language: " + response.data.Language);
-        console.log("Plot: " + response.data.Plot);
-        console.log("Actors: " + response.data.Actors);
+        var movieData = response.data;
+        var logData ="";
 
+        for (var key in movieData) {
+            
+            if (key === "Title"){
+                logData += `${key}: ${movieData[key]}\n`;
+            }
+            if (key === "Year"){
+                logData += `${key}: ${movieData[key]}\n`;
+            }
+            if (key === "imdbRating"){
+                logData += `IMDB Rating: ${movieData[key]}\n`;
+            }
+            if (key === "Ratings"){
+
+                for (const key2 in movieData[key]) {
+                    const movieDataKey2 =movieData[key][key2]
+                    if (movieDataKey2.Source === "Rotten Tomatoes") {
+                        logData += `${movieDataKey2.Source}: ${movieDataKey2.Value}\n`;
+                    }
+                }
+            }
+            if (key === "Country"){
+                logData += `${key}: ${movieData[key]}\n`;
+            }
+            if (key === "Language"){
+                logData += `${key}: ${movieData[key]}\n`;
+            }
+            if (key === "Plot"){
+                logData += `${key}: ${movieData[key]}\n`;
+            }
+            if (key === "Actors"){
+                logData += `${key}: ${movieData[key]}\n`;
+            }
+        }
+        console.log(`${lineDivide}${logTime}${logData}${lineDivide}`);
+        log(`${lineDivide}${logTime}${logData}${lineDivide}`);
     });
+}
+
+function readTxt() {
+    fs.readFile("./random.txt", "utf8", (error, data) => {
+        if (error) {
+            console.log("There was an error!");
+        }
+        var fileData = data.split(",");
+        
+        //tried to make this function initiate the command node liri.js read
+        // category = fileData[0];
+        // search = fileData[1];
+
+        searchSpotify(fileData[1]);
+    });
+}
+
+function log(data) {
+    fs.appendFile("log.txt", data, (err) => {
+        if (err) { console.log(err); }
+    })
 }
