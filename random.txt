@@ -1,1 +1,4 @@
-spotify,"I Want it That Way"
+spotify,"I Want it That Way",
+band,"Drake",
+movie,"Predator",
+spotify,"never go",

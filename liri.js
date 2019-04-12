@@ -7,7 +7,7 @@ var moment = require("moment");
 var keys = require("./keys.js");
 var spotify = new Spotify(keys.spotify);
 var lineDivide = "\n--------------------------------------------------------\n";
-var logTime = `${moment().format("L'LLLL")}\n`;
+var logTime = `Log info: ${moment().format("L'LLLL")}\n`;
 //first argument should be the category
 var category = process.argv[2];
 var search = process.argv.slice(3).join(" ");
@@ -38,7 +38,7 @@ switch (category) {
 
     default:
         {
-            console.log("Please type the category you want to search (spotify, band, movie, fs)");
+            console.log("Please type the category you want to search (spotify, band, movie, read)");
         }
 }
 
@@ -50,42 +50,50 @@ function searchSpotify(search) {
     spotify.search({
         type: 'track',
         query: search,
-        limit: 1
+        limit: 3
     }, function (err, data) {
         if (err) {
             // return console.log('Error occurred: ' + err);
-            return console.log('Error occurred: please make search you spelled it correctly!!!!!');
+            return console.log('Error occurred: please make search you spelled it correctly!');
         }
-
-        // Artist(s)
-        var spotArtist = data.tracks.items[0].artists[0].name;
-        // The song's name
-        var spotMusicName = data.tracks.items[0].name;
-        // A preview link of the song from Spotify
-        var spotPreviewName = data.tracks.items[0].preview_url;
-        // The album that the song is from
-        var spotAlbum = data.tracks.items[0].album.name;
-        var logData = `${lineDivide}${logTime}The artist is ${spotArtist}\nand the song's name is ${spotMusicName}\nfrom the album ${spotAlbum}\n Here's a preview link: ${spotPreviewName}${lineDivide}`;
-        console.log(logData);
-        //log data to log txt
-        log(logData)
+        
+        for (let i = 0; i <= 2; i++) {
+            var spotData = data.tracks.items[i];
+            // Artist(s)
+            var spotArtist = spotData.artists[0].name;
+            // The song's name
+            var spotMusicName = spotData.name;
+            // A preview link of the song from Spotify
+            var spotPreviewName = spotData.preview_url;
+            // The album that the song is from
+            var spotAlbum = spotData.album.name;
+            var logData = `${lineDivide}${logTime}The artist is ${spotArtist}\nand the song's name is ${spotMusicName}\nfrom the album ${spotAlbum}\nHere's a preview link: ${spotPreviewName}`;
+            
+            console.log(logData);
+            //log data to log txt
+            log(logData);
+        }
     });
 }
 
 function searchBand(search) {
     var bandSearch = "https://rest.bandsintown.com/artists/" + search + "/events?app_id=codingbootcamp"
     axios.get(bandSearch).then((response) => {
-        var artist = response.data[0];
-        // Name of the venue
-        var venueName = artist.venue.name;
-        // Venue location
-        var venueLocation = artist.venue.city + ", " + artist.venue.region + ", " + artist.venue.country;
-        // Date of the Event(use moment to format this as "MM/DD/YYYY")
-        var venueEvent = artist.datetime;
 
-        var logData = `${lineDivide}${logTime}${search} is playing at ${venueName} \nin ${venueLocation} \non ${moment(venueEvent).format("L")}${lineDivide}`;
-        console.log(logData);
-        log(logData);
+        console.log(response.data[0].venue);
+        for (let i = 0; i <= 3; i++) {
+            var artist = response.data[i];
+            // Name of the venue
+            var venueName = artist.venue.name;
+            // Venue location
+            var venueLocation = artist.venue.city + ", " + artist.venue.region + ", " + artist.venue.country;
+            // Date of the Event(use moment to format this as "MM/DD/YYYY")
+            var venueEvent = artist.datetime;
+
+            var logData = `${lineDivide}${logTime}${search} is playing at ${venueName} \nin ${venueLocation} \non ${moment(venueEvent).format("L")}${lineDivide}`;
+            console.log(logData);
+            log(logData);
+        }
     });
 }
 
@@ -95,38 +103,38 @@ function searchMovie(search) {
     axios.get(omdbSearch).then((response) => {
 
         var movieData = response.data;
-        var logData ="";
+        var logData = "";
 
         for (var key in movieData) {
-            
-            if (key === "Title"){
+
+            if (key === "Title") {
                 logData += `${key}: ${movieData[key]}\n`;
             }
-            if (key === "Year"){
+            if (key === "Year") {
                 logData += `${key}: ${movieData[key]}\n`;
             }
-            if (key === "imdbRating"){
+            if (key === "imdbRating") {
                 logData += `IMDB Rating: ${movieData[key]}\n`;
             }
-            if (key === "Ratings"){
+            if (key === "Ratings") {
 
                 for (const key2 in movieData[key]) {
-                    const movieDataKey2 =movieData[key][key2]
+                    const movieDataKey2 = movieData[key][key2]
                     if (movieDataKey2.Source === "Rotten Tomatoes") {
                         logData += `${movieDataKey2.Source}: ${movieDataKey2.Value}\n`;
                     }
                 }
             }
-            if (key === "Country"){
+            if (key === "Country") {
                 logData += `${key}: ${movieData[key]}\n`;
             }
-            if (key === "Language"){
+            if (key === "Language") {
                 logData += `${key}: ${movieData[key]}\n`;
             }
-            if (key === "Plot"){
+            if (key === "Plot") {
                 logData += `${key}: ${movieData[key]}\n`;
             }
-            if (key === "Actors"){
+            if (key === "Actors") {
                 logData += `${key}: ${movieData[key]}\n`;
             }
         }
@@ -141,12 +149,27 @@ function readTxt() {
             console.log("There was an error!");
         }
         var fileData = data.split(",");
-        
+
         //tried to make this function initiate the command node liri.js read
         // category = fileData[0];
         // search = fileData[1];
 
-        searchSpotify(fileData[1]);
+        //every even value is the category
+        for (var i = 0; i < fileData.length; i++) {
+            if (i % 2 === 0) {
+                if (fileData[i] === "spotify") {
+                    searchSpotify(fileData[i + 1]);
+                }
+                console.log(fileData[i]);
+                if (fileData[i] === "band") {
+                    console.log(fileData[i]);
+                    searchBand(fileData[i + 1]);
+                }
+                if (fileData[i] === "movie") {
+                    searchMovie(fileData[i + 1]);
+                }
+            }
+        }
     });
 }
 
