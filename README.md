@@ -6,13 +6,13 @@
 `node liri.js (command) (search item)`
 LIRI takes in two user arguments, the first one specifies what kind of category you want to search; the second one is the item to search for
 
-###Spotify
+### Spotify
 The `spotify` command  will search for a song track, it will then display Artist(s)The song's name, a preview link of the song, and the album that the song is from.
 
-###Band in Town
+### Band in Town
 The `band` command uses the Bands in Town API and uses the search item to show you the latest venue of the artist you searched for.
 
-###Movie
+### Movie
 The `movie` command uses OMDB's API to retrieve the search item the user provides.  This is the ouput of the search
    * Title of the movie.
    * Year the movie came out.
@@ -23,5 +23,5 @@ The `movie` command uses OMDB's API to retrieve the search item the user provide
    * Plot of the movie.
    * Actors in the movie.
 
-###file system
+### Read
 The `read` command searches the `random.txt` file and uses that search term to find the song.
