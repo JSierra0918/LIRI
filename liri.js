@@ -80,6 +80,7 @@ function searchSpotify(search) {
 }
 
 function searchBand(search) {
+    console.log("This is the search" +search);
     var bandSearch = "https://rest.bandsintown.com/artists/" + search + "/events?app_id=codingbootcamp"
     axios.get(bandSearch).then((response) => {
 
@@ -152,23 +153,19 @@ function readTxt() {
             console.log("There was an error!");
         }
         var fileData = data.split(",");
-
-        //tried to make this function initiate the command node liri.js read
-        // category = fileData[0];
-        // search = fileData[1];
-
+        
         //every even value is the category
         for (var i = 0; i < fileData.length; i++) {
+
             if (i % 2 === 0) {
+                // console.log(fileData[i].trim());
                 if (fileData[i] === "spotify") {
                     searchSpotify(fileData[i + 1]);
                 }
-                console.log(fileData[i]);
-                if (fileData[i] === "band") {
-                    console.log(fileData[i]);
-                    searchBand(fileData[i + 1]);
+                if (fileData[i].trim() === "band") {
+                    searchBand(fileData[i + 1].replace(/['"]+/g, ''));
                 }
-                if (fileData[i] === "movie") {
+                if (fileData[i].trim() === "movie") {
                     searchMovie(fileData[i + 1]);
                 }
             }
