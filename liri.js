@@ -28,6 +28,9 @@ switch (category) {
 
     case ("movie"):
         {
+            if (search === "") {
+                search = "Mr.Nobody"
+            }
             searchMovie(search);
         }
         break;
@@ -56,7 +59,7 @@ function searchSpotify(search) {
             // return console.log('Error occurred: ' + err);
             return console.log('Error occurred: please make search you spelled it correctly!');
         }
-        
+
         for (let i = 0; i <= 2; i++) {
             var spotData = data.tracks.items[i];
             // Artist(s)
@@ -68,7 +71,7 @@ function searchSpotify(search) {
             // The album that the song is from
             var spotAlbum = spotData.album.name;
             var logData = `${lineDivide}${logTime}The artist is ${spotArtist}\nand the song's name is ${spotMusicName}\nfrom the album ${spotAlbum}\nHere's a preview link: ${spotPreviewName}${lineDivide}`;
-            
+
             console.log(logData);
             //log data to log txt
             log(logData);
