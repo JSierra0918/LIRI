@@ -27,5 +27,5 @@ The `movie` command uses OMDB's API to retrieve the search item the user provide
 The `read` command searches the `random.txt` file and uses that search term to find the song.
 
 ### Video Link
-[Liri Use Video]{https://drive.google.com/file/d/1sxvAyNm43_BaBmG7EJ9k1iBltxl7Xv5x/view}
+[Liri Use Video](https://drive.google.com/file/d/1sxvAyNm43_BaBmG7EJ9k1iBltxl7Xv5x/view)
 if it doesnot work, please check the folder "example video"
